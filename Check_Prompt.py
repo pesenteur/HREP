@@ -22,7 +22,7 @@ class CheckPrompt(nn.Module):
         self.lin.weight = nn.Parameter(torch.concat([weight, weight], dim=1))
         self.lin.bias = nn.Parameter(b)
 
-        self.pre_fix = torch.nn.Parameter(torch.randn(180, 144))
+        self.pre_fix = torch.nn.Parameter(torch.randn(69, 144))
 
     def forward(self, index, emb):
         tmp = torch.concat([self.pre_fix[index], emb], dim=1)
@@ -31,10 +31,10 @@ class CheckPrompt(nn.Module):
 
 
 def check_test():
-    check_counts = np.load('../data/check_counts.npy', allow_pickle=True).reshape(180, 1)
+    check_counts = np.load('../data/check_counts.npy', allow_pickle=True).reshape(69, 1)
     pre_train_emb = np.load('emb.npy', allow_pickle=True)
 
-    index = torch.arange(180)
+    index = torch.arange(69)
 
     kf = KFold(n_splits=5)
     y_preds = []

@@ -21,15 +21,14 @@ def load_data():
     s_adj = np.load(data_path + args.source_adj, allow_pickle=True)
     s_adj[np.isnan(s_adj)] = 0
 
-    neighbor = np.load(data_path + args.neighbor, allow_pickle=True)
 
-    return poi_similarity, s_adj, d_adj, mobility, neighbor
+    return poi_similarity, s_adj, d_adj, mobility
 
 
 def graph_to_COO(similarity, importance_k):
-    graph = torch.eye(180)
+    graph = torch.eye(69)
 
-    for i in range(180):
+    for i in range(69):
         graph[np.argsort(similarity[:, i])[-importance_k:], i] = 1
         graph[i, np.argsort(similarity[:, i])[-importance_k:]] = 1
 
@@ -44,23 +43,23 @@ def create_graph(similarity, importance_k):
 
 
 def pair_sample(neighbor):
-    positive = torch.zeros(180, dtype=torch.long)
-    negative = torch.zeros(180, dtype=torch.long)
+    positive = torch.zeros(69, dtype=torch.long)
+    negative = torch.zeros(69, dtype=torch.long)
 
-    for i in range(180):
+    for i in range(69):
         region_idx = np.random.randint(len(neighbor[i]))
         pos_region = neighbor[i][region_idx]
         positive[i] = pos_region
-    for i in range(180):
-        neg_region = np.random.randint(180)
+    for i in range(69):
+        neg_region = np.random.randint(69)
         while neg_region in neighbor[i] or neg_region == i:
-            neg_region = np.random.randint(180)
+            neg_region = np.random.randint(69)
         negative[i] = neg_region
     return positive, negative
 
 
 def create_neighbor_graph(neighbor):
-    graph = np.eye(180)
+    graph = np.eye(69)
 
     for i in range(len(neighbor)):
         for region in neighbor[i]:

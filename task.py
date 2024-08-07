@@ -14,8 +14,8 @@ check_counts = np.load(args.data_path + args.check_counts, allow_pickle=True)
 
 with open(args.data_path + args.mh_cd, 'r') as f:
     mh_cd = json.load(f)
-mh_cd_labels = np.zeros(180)
-for i in range(180):
+mh_cd_labels = np.zeros(69)
+for i in range(69):
     mh_cd_labels[i] = mh_cd[str(i)]
 
 

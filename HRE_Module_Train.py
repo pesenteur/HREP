@@ -9,17 +9,25 @@ import numpy as np
 import torch
 from torch import optim
 import torch.nn.functional as F
+from torch_geometric.utils import from_scipy_sparse_matrix
+import scipy.sparse as sp
 
 seed = 2022
 torch.manual_seed(seed=seed)
 np.random.seed(seed)
 random.seed(seed)
 
-poi_similarity, s_adj, d_adj, mobility, neighbor = utils.load_data()
+poi_similarity, s_adj, d_adj, mobility= utils.load_data()
+
+data_path = args.data_path
+neighbor = np.load(data_path + args.neighbor, allow_pickle=True)
+adj_matrix_sparse = sp.coo_matrix(neighbor)
+n_edge_index, edge_attr = from_scipy_sparse_matrix(adj_matrix_sparse)
+
 poi_edge_index = utils.create_graph(poi_similarity, args.importance_k)
 s_edge_index = utils.create_graph(s_adj, args.importance_k)
 d_edge_index = utils.create_graph(d_adj, args.importance_k)
-n_edge_index = utils.create_neighbor_graph(neighbor)
+
 
 poi_edge_index = torch.tensor(poi_edge_index, dtype=torch.long).to(args.device)
 s_edge_index = torch.tensor(s_edge_index, dtype=torch.long).to(args.device)
